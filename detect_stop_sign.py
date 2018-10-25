@@ -1,16 +1,26 @@
 import cv2
 import numpy as np
-import time
 
-stop_sign_cascade = cv2.CascadeClassifier("test.xml")
 cap = cv2.VideoCapture(0)
+stop_sign_cascade = cv2.CascadeClassifier("stopsign.xml")
 
-while True:
-    ret, image = cap.read()
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    stop_signs = stop_sign_cascade.detectMultiScale(gray, 1.5, 4)
 
-    for (x,y,w,h) in stop_signs:
-        cv2.rectangle(image, (x,y), (x+w, y+h), (255,255,255), 2)
+while(True):
+    ret, frame = cap.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    stop_signs = stop_sign_cascade.detectMultiScale(gray, 1.5, 5)
+    if ret == True:
 
-    cv2.imshow('image', image)
+        for(x,y,w,h) in stop_signs:
+            cv2.rectangle(frame, (x,y), (x+w, y+h), (0,128,0), 2)
+
+        cv2.imshow('frame',frame)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    else:
+        break
+
+cap.release()
+cv2.destroyAllWindows()
